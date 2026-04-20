@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, CheckCircle2, Loader2, IndianRupee, PartyPopper, Phone, User, Hash } from "lucide-react";
+import { X, CheckCircle2, Loader2, IndianRupee, PartyPopper, Phone, User, Hash, MessageCircle } from "lucide-react";
 import { Slot, BookingData } from "@/types";
 import { SITE_CONFIG, GOOGLE_FORM_CONFIG } from "@/lib/constants";
 import { toast } from "sonner";
 import Image from "next/image";
+import { sendBookingAlerts } from "@/lib/notifications";
+import Swal from "sweetalert2";
 
 interface BookingModalProps {
   slots: Slot[];
@@ -35,12 +37,22 @@ export default function BookingModal({ slots, onClose, onSuccess, selectedDate }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.txnid) {
-      toast.error("Please fill in all details");
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill in all details',
+        confirmButtonColor: '#22c55e',
+      });
       return;
     }
 
     if (!/^\d{10}$/.test(formData.phone)) {
-      toast.error("Please enter a valid 10-digit phone number");
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Phone',
+        text: 'Please enter a valid 10-digit phone number',
+        confirmButtonColor: '#22c55e',
+      });
       return;
     }
 
@@ -67,16 +79,38 @@ export default function BookingModal({ slots, onClose, onSuccess, selectedDate }
         body: params.toString(),
       });
 
+      // Send WhatsApp Notifications to Admins
+      try {
+        await sendBookingAlerts({
+          name: formData.name,
+          phone: formData.phone,
+          slot: slotText,
+          date: formattedDate,
+          txnid: formData.txnid,
+        });
+      } catch (notifyError) {
+        console.error("Notification failed:", notifyError);
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Request Sent!',
+        text: 'Your booking request has been submitted successfully.',
+        confirmButtonColor: '#22c55e',
+        timer: 3000,
+      });
+
       setIsSuccess(true);
       onSuccess(slots);
       
-      setTimeout(() => {
-        onClose();
-      }, 5000);
-
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong. Please try again.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: 'Something went wrong. Please try again or contact support.',
+        confirmButtonColor: '#ef4444',
+      });
     } finally {
       setLoading(false);
     }
@@ -100,9 +134,9 @@ export default function BookingModal({ slots, onClose, onSuccess, selectedDate }
         className="relative w-full max-w-xl bg-zinc-900 border border-white/10 rounded-[3rem] shadow-2xl overflow-hidden overflow-y-auto max-h-[90vh] no-scrollbar"
       >
         {isSuccess ? (
-          <div className="p-12 flex flex-col items-center text-center space-y-8 animate-in fade-in zoom-in duration-500">
-            <div className="h-28 w-28 bg-cricket-green rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(34,197,94,0.4)] relative">
-               <CheckCircle2 className="h-14 w-14 text-white" />
+          <div className="p-8 md:p-12 flex flex-col items-center text-center space-y-8 animate-in fade-in zoom-in duration-500">
+            <div className="h-24 w-24 bg-cricket-green rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(34,197,94,0.4)] relative">
+               <CheckCircle2 className="h-12 w-12 text-white" />
                <motion.div 
                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
                  transition={{ repeat: Infinity, duration: 2 }}
@@ -110,20 +144,61 @@ export default function BookingModal({ slots, onClose, onSuccess, selectedDate }
                />
             </div>
             
-            <div className="space-y-3">
-              <h2 className="text-4xl font-black tracking-tighter flex items-center justify-center gap-3">
+            <div className="space-y-4">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tighter flex items-center justify-center gap-3">
                 REQUEST SENT <PartyPopper className="h-8 w-8 text-cricket-green" />
               </h2>
-              <p className="text-zinc-400 font-medium max-w-xs mx-auto text-sm leading-relaxed">
-                We've received your booking request for {slots.length} session{slots.length > 1 ? 's' : ''}. Verified slots turn <span className="text-cricket-green font-bold">Confirmed</span> soon!
+              
+              <div className="bg-cricket-green/10 border border-cricket-green/20 rounded-3xl p-6 space-y-4 max-w-sm mx-auto">
+                 <p className="text-white font-bold text-sm uppercase tracking-widest">⚠️ Action Required ⚠️</p>
+                 <p className="text-zinc-300 text-sm leading-relaxed">
+                   To finalize your booking, please **Call** or **WhatsApp** us now with your **Payment Screenshot**.
+                 </p>
+                 
+                 <div className="space-y-3 pt-2">
+                    {[
+                      { number: "9392454506", label: "Admin 1 (Primary)" },
+                      { number: "7569521993", label: "Admin 2" }
+                    ].map((contact, i) => (
+                      <div key={i} className="flex flex-col gap-3 bg-black/40 p-5 rounded-[2rem] border border-white/5">
+                        <div className="flex items-center justify-between px-2">
+                          <div className="text-left">
+                            <p className="text-[10px] font-black text-zinc-500 uppercase leading-none mb-1">{contact.label}</p>
+                            <p className="text-white font-bold text-sm tracking-tight">{contact.number}</p>
+                          </div>
+                          <a 
+                            href={`tel:+91${contact.number}`}
+                            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all"
+                            title="Call Now"
+                          >
+                            <Phone className="h-4 w-4 text-cricket-green" />
+                          </a>
+                        </div>
+                        
+                        <a 
+                          href={`https://wa.me/91${contact.number}?text=${encodeURIComponent(`Hi, I'm ${formData.name}. I just booked slots (${slotText}) for ${formData.date} at KN BOX. My Txn ID is ${formData.txnid}. Here is my payment screenshot.`)}`}
+                          target="_blank"
+                          className="w-full bg-cricket-green/20 hover:bg-cricket-green text-cricket-green hover:text-black py-4 rounded-2xl transition-all flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px]"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                          <span>Send Screenshot via WhatsApp</span>
+                        </a>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+
+              <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest leading-relaxed pt-4">
+                Your slots are currently <span className="text-yellow-500">Pending Approval</span>.<br />
+                We verify and confirm within 15 minutes!
               </p>
             </div>
 
             <button
               onClick={onClose}
-              className="bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all"
+              className="w-full bg-white text-black hover:bg-cricket-green hover:text-white py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all"
             >
-              Close Window
+              Back to Schedule
             </button>
           </div>
         ) : (

@@ -8,8 +8,8 @@ export const SITE_CONFIG = {
     vpaName: "VAMSHI KRISHNA",
   },
   contact: {
-    phone: "+91 98765 43210",
-    whatsapp: "919876543210",
+    phone: "+91 9392454506, 7569521993",
+    whatsapp: "919392454506",
   },
 };
 

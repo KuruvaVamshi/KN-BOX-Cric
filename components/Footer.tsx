@@ -31,15 +31,9 @@ export default function Footer() {
                 <Phone className="h-4 w-4 text-cricket-green" />
                 <span>{SITE_CONFIG.contact.phone}</span>
               </li>
-              <li className="flex items-center space-x-3 text-zinc-400 font-medium">
-                <Globe className="h-4 w-4 text-cricket-green" />
-                <a href="/admin" className="hover:text-white transition-colors underline decoration-cricket-green/30 underline-offset-4">
-                  Open Admin Panel
-                </a>
-              </li>
               <li className="flex items-center space-x-3 text-zinc-400">
                 <MapPin className="h-4 w-4 text-cricket-green" />
-                <span>City Center, Turf Zone, India</span>
+                <span>Beside Sangameshwara Temple, Alampur, TG</span>
               </li>
             </ul>
           </div>
@@ -52,10 +46,7 @@ export default function Footer() {
             <ul className="space-y-2 text-zinc-400">
               <li className="flex justify-between">
                 <span>Mon - Sun</span>
-                <span className="text-white font-medium">6:00 PM - 11:00 PM</span>
-              </li>
-              <li className="text-sm text-zinc-500 italic mt-2">
-                * Available for night matches only
+                <span className="text-white font-medium">7:00 AM - 11:00 PM</span>
               </li>
             </ul>
           </div>
