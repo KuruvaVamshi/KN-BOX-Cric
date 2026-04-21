@@ -1,0 +1,93 @@
+================================================================================
+KN-BOX: THE ULTIMATE TURF EXPERIENCE - DOCUMENTATION
+================================================================================
+
+1. PROJECT OVERVIEW
+-------------------
+KN-BOX is a premium box cricket booking platform designed to provide a seamless
+experience for enthusiasts to book cricket slots. The application supports
+real-time slot availability, advance payment tracking, and an administrative
+dashboard for booking management.
+
+- Live URL: https://knpowerplay.web.app/
+- Purpose: Online slot booking and management for KN Box Cricket, Alampur.
+
+2. TECH STACK
+-------------
+- Frontend Framework: Next.js 15+ (App Router)
+- Styling: Tailwind CSS
+- Animation: Framer Motion
+- Icons: Lucide React, React Icons
+- Notifications: SweetAlert2, Sonner
+- Database/Storage: Google Sheets (via Google Forms integration)
+- Hosting: Firebase Hosting
+
+3. CORE FEATURES
+----------------
+- Booking System: Interactive slot selection with date picker.
+- Payment Integration: UPI-based payment flow (Manual verification via Txn ID).
+- Admin Dashboard: Secure access to view and manage all bookings.
+- Real-time Sync: Fetches data live from Google Sheets CSV export.
+- Responsive Design: Optimized for both mobile and desktop users.
+- Google Maps Integration: Easy location finding for users.
+
+4. PROJECT STRUCTURE
+--------------------
+/app
+  /admin        - Admin dashboard for viewing and managing bookings.
+  /slots        - Booking interface and slot selection logic.
+  layout.tsx    - Root layout with font and metadata configuration.
+  page.tsx      - Landing page with features, pricing, and location.
+/components
+  AdminBookingModal.tsx - Detailed view and status editing for admins.
+  Navbar.tsx    - Navigation components.
+/lib
+  constants.ts  - Centralized configuration (Pricing, UPI, API URLs).
+  google-sheets.ts - Logic for fetching and parsing Google Sheets data.
+/public         - Static assets (favicons, images).
+/types          - TypeScript declarations for bookings and configuration.
+
+5. DATA INTEGRATION (GOOGLE SHEETS)
+-----------------------------------
+The project uses a "serverless" database approach using Google Sheets:
+- Submission: Data is posted to a Google Form using `fetch`.
+- Retrieval: Data is pulled via a published CSV URL from the linked Sheet.
+- Form Config: Located in `lib/constants.ts` under `GOOGLE_FORM_CONFIG`.
+
+6. CONFIGURATION (lib/constants.ts)
+-----------------------------------
+Modify this file to update:
+- Pricing: `SITE_CONFIG.pricing` (Current: ₹500/hr)
+- Advance Amount: `SITE_CONFIG.advanceAmount` (Current: ₹250)
+- Payment Details: UPI ID and VPA Name.
+- Contact Info: Mobile numbers and WhatsApp links.
+- Slot Times: `SLOTS_DATA` array.
+
+7. LOCAL DEVELOPMENT
+--------------------
+To run the project locally:
+1. Clone the repository.
+2. Install dependencies:
+   npm install
+3. Run the development server:
+   npm run dev
+4. Access at: http://localhost:3000
+
+8. DEPLOYMENT
+-------------
+The project is configured for Firebase Hosting.
+- Firebase Project: knpowerplay
+- Deployment Command:
+  npm run build
+  firebase deploy
+
+9. CONTACT & SUPPORT
+--------------------
+For any technical issues or site management:
+- Primary Contact: +91 9392454506
+- Secondary Contact: +91 7569521993
+- Location: Beside Sangameshwara Temple, Alampur, TG.
+
+================================================================================
+Document Generated on: 2026-04-20
+================================================================================

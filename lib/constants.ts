@@ -1,6 +1,7 @@
 export const SITE_CONFIG = {
-  name: "KN BOX",
+  name: "KN BOX Cricket",
   tagline: "The Ultimate Turf Experience",
+  siteUrl: "https://kn-boxcricket.vercel.app",
   advanceAmount: 250,
   pricing: 500, // Normalized to number
   payment: {

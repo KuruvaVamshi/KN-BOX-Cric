@@ -92,12 +92,40 @@ export default function BookingModal({ slots, onClose, onSuccess, selectedDate }
         console.error("Notification failed:", notifyError);
       }
 
+      const whatsappMsg = `Hi Admin, I'm ${formData.name}. I've just booked the slots: ${slotText} for ${formattedDate}. Please accept my booking!`;
+      const encodedMsg = encodeURIComponent(whatsappMsg);
+      const admin1Url = `https://wa.me/919392454506?text=${encodedMsg}`;
+      const admin2Url = `https://wa.me/917569521993?text=${encodedMsg}`;
+
       Swal.fire({
+        title: 'Booking Request Sent!',
+        html: `
+          <div class="text-zinc-400 space-y-4 pt-2">
+            <p>Your request for <b class="text-white">${slotText}</b> on <b class="text-white">${formattedDate}</b> has been received.</p>
+            <p class="text-sm">Click below to notify admins to <b class="text-cricket-green">Accept your booking</b>:</p>
+            <div class="grid grid-cols-1 gap-3 pt-2">
+              <a href="${admin1Url}" target="_blank" class="flex items-center justify-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold py-4 px-4 rounded-2xl transition-all no-underline shadow-[0_10px_20px_rgba(34,197,94,0.2)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Notify Admin 1 (Primary)
+              </a>
+              <a href="${admin2Url}" target="_blank" class="flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 px-4 rounded-2xl transition-all no-underline border border-white/5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Notify Admin 2
+              </a>
+            </div>
+          </div>
+        `,
         icon: 'success',
-        title: 'Request Sent!',
-        text: 'Your booking request has been submitted successfully.',
+        showConfirmButton: true,
+        confirmButtonText: 'Done',
         confirmButtonColor: '#22c55e',
-        timer: 3000,
+        background: '#121212',
+        color: '#fff',
+        customClass: {
+          popup: 'rounded-[3rem] border border-white/10 shadow-2xl p-8',
+          title: 'text-3xl font-black tracking-tighter uppercase',
+          confirmButton: 'w-full rounded-2xl font-black uppercase tracking-widest text-[10px] py-4 mt-4 shadow-lg'
+        }
       });
 
       setIsSuccess(true);

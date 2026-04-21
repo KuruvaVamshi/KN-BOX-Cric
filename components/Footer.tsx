@@ -52,8 +52,19 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/5 text-center text-zinc-500 text-sm">
+        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col items-center justify-center gap-4 text-zinc-500 text-sm text-center">
           <p>© {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
+          <p className="font-semibold tracking-[0.3em] uppercase text-[10px] md:text-xs">
+            WEBSITE by{" "}
+            <a 
+              href="https://www.linkedin.com/in/vamshi-kuruva/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white hover:text-cricket-green transition-colors cursor-pointer decoration-cricket-green underline-offset-4 hover:underline"
+            >
+              VAMSHi
+            </a>
+          </p>
         </div>
       </div>
     </footer>

@@ -1,0 +1,24 @@
+🚀 Excited to share my latest project: KN-BOX – The Ultimate Box Cricket Booking Platform! 🏏
+
+I’ve been working on a seamless, high-performance solution for sports enthusiasts to book their victory slots. KN-BOX combines a premium user experience with a robust backend to make turf management effortless.
+
+Check it out here: https://knpowerplay.web.app/
+
+Key Features:
+✅ Real-time Slot Availability – No more back-and-forth calls!
+✅ Seamless Booking Flow – Pick a date, choose a slot, and secure it instantly.
+✅ Integrated UPI Payments – Simplified advance payment tracking.
+✅ Admin Dashboard – Data-driven management of all bookings.
+✅ Responsive & Animated UI – Built for a "wow" experience on mobile and desktop.
+
+Technical Highlights:
+⚡ Framework: Next.js 15 (App Router)
+🎨 Styling: Tailwind CSS & Framer Motion for smooth animations
+📊 Backend: Google Sheets API integration (Serverless & Lightweight)
+🚀 Hosting: Firebase
+
+Building this was a great journey in optimizing frontend performance and exploring creative ways to use Google Sheets as a real-time database.
+
+Huge thanks to everyone who supported the process! If you're in Alampur, come play at KN BOX! 🏆
+
+#NextJS #WebDevelopment #ReactJS #TailwindCSS #Firebase #SmallBusiness #BoxCricket #SportsTech #Coding #Entrepreneurship #KNBOX

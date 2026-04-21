@@ -17,8 +17,53 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
-  description: "Book your box cricket slots online with ease. Premium turf experience with 24/7 booking availability.",
+  metadataBase: new URL(SITE_CONFIG.siteUrl),
+  title: {
+    default: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
+    template: `%s | ${SITE_CONFIG.name}`,
+  },
+  description: "Book your box cricket slots online with ease. Premium turf experience with 24/7 booking availability in your city.",
+  keywords: ["box cricket", "cricket turf", "online booking", "KN BOX Cricket", "sports slot booking", "cricket ground booking"],
+  authors: [{ name: "KN BOX Team" }],
+  creator: "KN BOX",
+  publisher: "KN BOX",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  icons: {
+    icon: "/kn-logo.jpeg",
+    apple: "/kn-logo.jpeg",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: SITE_CONFIG.siteUrl,
+    siteName: SITE_CONFIG.name,
+    title: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
+    description: "Premium box cricket experience. Book your slots now!",
+    images: [
+      {
+        url: "/kn-logo.jpeg",
+        width: 1200,
+        height: 630,
+        alt: SITE_CONFIG.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
+    description: "Premium box cricket experience. Book your slots now!",
+    images: ["/kn-logo.jpeg"],
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "", 
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
