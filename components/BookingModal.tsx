@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { sendBookingAlerts } from "@/lib/notifications";
 import Swal from "sweetalert2";
+import { getPriceByTime } from "@/lib/pricing-utils";
 
 interface BookingModalProps {
   slots: Slot[];
@@ -59,25 +60,42 @@ export default function BookingModal({ slots, onClose, onSuccess, selectedDate }
     setLoading(true);
 
     try {
-      const gFormUrl = GOOGLE_FORM_CONFIG.FORM_URL;
-      const params = new URLSearchParams();
-      params.append(GOOGLE_FORM_CONFIG.entries.name, formData.name);
-      params.append(GOOGLE_FORM_CONFIG.entries.phone, formData.phone);
-      params.append(GOOGLE_FORM_CONFIG.entries.slot, slotText);
-      params.append(GOOGLE_FORM_CONFIG.entries.txnid, formData.txnid);
-      
+      // Pre-check availability one last time before submitting
+      const latestBookings = await import("@/lib/google-sheets").then(m => m.fetchLiveBookings());
       const year = selectedDate.getFullYear();
       const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
       const day = selectedDate.getDate().toString().padStart(2, '0');
       const formattedDate = `${year}-${month}-${day}`;
-      params.append(GOOGLE_FORM_CONFIG.entries.date, formattedDate);
-
-      await fetch(gFormUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params.toString(),
+      
+      const requestedSlots = slotText.split(",").map(s => s.trim());
+      const hasConflict = latestBookings.some(r => {
+        if (r.date === formattedDate && r.status.trim().toLowerCase() !== 'rejected') {
+          const rowSlots = r.slot.split(",").map(s => s.trim());
+          return requestedSlots.some(s => rowSlots.includes(s));
+        }
+        return false;
       });
+
+      if (hasConflict) {
+        setLoading(false);
+        Swal.fire({
+          icon: 'error',
+          title: 'Slot Already Taken',
+          text: 'One or more slots you selected were just booked by someone else. Please refresh and try again.',
+          confirmButtonColor: '#ef4444',
+        });
+        onClose();
+        return;
+      }
+
+      // Submit via validated GAS API
+      await import("@/lib/admin-actions").then(m => m.submitBooking({
+        name: formData.name,
+        phone: formData.phone,
+        slot: slotText,
+        date: formattedDate,
+        txnid: formData.txnid,
+      }));
 
       // Send WhatsApp Notifications to Admins
       try {

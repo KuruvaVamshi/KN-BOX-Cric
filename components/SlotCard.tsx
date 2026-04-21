@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check, Calendar, Lock, Clock } from "lucide-react";
 import { Slot } from "@/types";
 import { cn } from "@/lib/utils";
+import { getPriceByTime } from "@/lib/pricing-utils";
 import { SITE_CONFIG } from "@/lib/constants";
 
 interface SlotCardProps {
@@ -80,7 +81,7 @@ export default function SlotCard({ slot, onSelect, isSelected }: SlotCardProps) 
       <div className="mt-8">
         <div className="flex items-center justify-between">
            <span className="text-xs font-bold text-zinc-500 italic">
-             ₹{SITE_CONFIG.pricing}/hr
+             ₹{getPriceByTime(slot.time)}/hr
            </span>
            {isBooked ? (
              <span className="text-[10px] font-black text-red-500/50 uppercase tracking-tighter">Reserved</span>

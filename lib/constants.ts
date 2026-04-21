@@ -2,10 +2,11 @@ export const SITE_CONFIG = {
   name: "KN BOX Cricket",
   tagline: "The Ultimate Turf Experience",
   siteUrl: "https://kn-boxcricket.vercel.app",
-  advanceAmount: 250,
-  pricing: 500, // Normalized to number
+  advanceAmount: 150,
+  dayPrice: 250,
+  nightPrice: 300,
   payment: {
-    upiId: "vamshikrishna9133@ybl", // Example UPI ID
+    upiId: "9392454506-7@axl", // Updated UPI ID
     vpaName: "VAMSHI KRISHNA",
   },
   contact: {

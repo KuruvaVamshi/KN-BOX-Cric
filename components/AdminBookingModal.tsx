@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { X, CheckCircle2, Loader2, User, Phone, Calendar, Clock, Hash } from "lucide-react";
 import { SLOTS_DATA, SITE_CONFIG } from "@/lib/constants";
 import { toast } from "sonner";
-import { addManualBooking } from "@/lib/admin-actions";
 import { sendBookingAlerts } from "@/lib/notifications";
 import Swal from "sweetalert2";
 
@@ -38,7 +37,31 @@ export default function AdminBookingModal({ onClose, onSuccess }: AdminBookingMo
 
     setLoading(true);
     try {
-      await addManualBooking(formData);
+      // Pre-check availability
+      const latestBookings = await import("@/lib/google-sheets").then(m => m.fetchLiveBookings());
+      const requestedSlot = formData.slot.trim();
+      
+      const hasConflict = latestBookings.some(r => {
+        if (r.date === formData.date && r.status.trim().toLowerCase() !== 'rejected') {
+          const rowSlots = r.slot.split(",").map(s => s.trim());
+          return rowSlots.includes(requestedSlot);
+        }
+        return false;
+      });
+
+      if (hasConflict) {
+        setLoading(false);
+        Swal.fire({
+          icon: 'error',
+          title: 'Conflict Detected',
+          text: `The slot ${formData.slot} is already booked for ${formData.date}.`,
+          confirmButtonColor: '#ef4444',
+        });
+        return;
+      }
+
+      const { submitBooking } = await import("@/lib/admin-actions");
+      await submitBooking(formData);
       
       // Send WhatsApp Notification
       try {

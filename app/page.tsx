@@ -109,9 +109,15 @@ export default function HomePage() {
               <p className="text-zinc-400 font-medium">No hidden charges. Just pure cricket.</p>
             </div>
             
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-8xl font-black text-cricket-green">₹{SITE_CONFIG.pricing}</span>
-              <span className="text-2xl font-bold text-zinc-500">/ HOUR</span>
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <div className="flex items-baseline space-x-3">
+                <span className="text-6xl md:text-8xl font-black text-cricket-green">₹{SITE_CONFIG.dayPrice}</span>
+                <span className="text-xl font-bold text-zinc-500 uppercase">/ Day Hour</span>
+              </div>
+              <div className="flex items-baseline space-x-3">
+                <span className="text-5xl md:text-7xl font-black text-white/90">₹{SITE_CONFIG.nightPrice}</span>
+                <span className="text-lg font-bold text-zinc-500 uppercase">/ Night Hour</span>
+              </div>
             </div>
             
             <ul className="grid grid-cols-2 gap-x-8 gap-y-4 max-w-lg mx-auto text-left py-4">

@@ -71,8 +71,22 @@ export default function SlotsPage() {
 
         if (status !== "expired") {
           if (record) {
-            const s = record.status.trim().toLowerCase();
-            status = s === "t" || s === "confirmed" ? "booked" : "pending";
+            const rowStatus = record.status.trim().toLowerCase();
+            const isConfirmed = rowStatus.includes("confirm") || 
+                                rowStatus.includes("booked") || 
+                                rowStatus.includes("paid") || 
+                                rowStatus === "t";
+            
+            const isRejected = rowStatus.includes("reject") || rowStatus.includes("cancel");
+
+            if (isConfirmed) {
+              status = "booked";
+            } else if (isRejected) {
+              status = "available";
+            } else {
+              status = "pending";
+            }
+            
             // Sheet has this slot — remove from local memory
             localPending.current.delete(localKey);
           } else if (isLocallyPending) {
