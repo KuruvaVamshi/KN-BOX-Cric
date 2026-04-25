@@ -1,1 +1,1 @@
-Deploy Link ---- https://knpowerplay.web.app/
+Deploy Link ---- kn-boxcricket.vercel.app
